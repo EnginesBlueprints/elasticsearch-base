@@ -15,12 +15,102 @@
         "level": "alpha",
         "patch": 0
       }
-    }
+    },
+    "timestamp": "2019-03-19T15:18:26+11:00"
   },
   "software": {
     "base": {
+      "name": "elasticsearch",
+      "framework": "openjdk9",
       "deployment_type": "web",
       "http_protocol": "https_and_http"
-    }
+    },
+    "scripts": {
+      "start": {
+        "language": "sh",
+        "content": "!#/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\n\r\ncd /home/app/elasticsearch\r\n./bin/elasticsearch &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
+      }
+    },
+    "installed_packages": [
+      {
+        "name": "elasticsearch-6.6.2.tar.gz",
+        "download_type": "http(s)",
+        "source_url": "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.6.2.tar.gz",
+        "destination": "elasticsearch",
+        "extraction_command": "tar -zpf ",
+        "path_to_extracted": "elasticsearch-6.6.2"
+      }
+    ],
+    "service_configurations": [
+      {
+        "publisher_namespace": "EnginesSystem",
+        "type_path": "filesystem/local/filesystem",
+        "variables": {
+          "service_name": "config",
+          "volume_src": "",
+          "engine_path": "",
+          "permissions": "rw",
+          "user": "_Engines_Builder(data_uid)",
+          "group": "_Engines_Builder(data_gid)"
+        }
+      },
+      {
+        "publisher_namespace": "EnginesSystem",
+        "type_path": "filesystem/local/filesystem",
+        "variables": {
+          "service_name": "logs",
+          "volume_src": "",
+          "engine_path": "",
+          "permissions": "rw",
+          "user": "_Engines_Builder(data_uid)",
+          "group": "_Engines_Builder(data_gid)"
+        }
+      },
+      {
+        "publisher_namespace": "EnginesSystem",
+        "type_path": "filesystem/local/filesystem",
+        "variables": {
+          "service_name": "data",
+          "volume_src": "",
+          "engine_path": "",
+          "permissions": "rw",
+          "user": "_Engines_Builder(data_uid)",
+          "group": "_Engines_Builder(data_gid)"
+        }
+      }
+    ],
+    "environment_variables": [
+      {
+        "name": "ES_HOME",
+        "value": "/home/app/elasticsearch",
+        "mandatory": true,
+        "immutable": true,
+        "input": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "ES_PATH_CONF",
+        "value": "/home/app/config/elasticsearch.yml",
+        "mandatory": true,
+        "immutable": true,
+        "input": {
+          "type": "boolean"
+        }
+      }
+    ],
+    "template_files": [
+      {
+        "path": "/home/app/config/elasticsearch.yml",
+        "language": "text",
+        "content": "path:\r\n    data: /home/fs/data/\r\n    logs: /home/fs/logs/\r\n    repo: /home/fs/repo/"
+      }
+    ],
+    "persistent_directories": [
+      {
+        "path": "/home/app/config/",
+        "volume_name": "config"
+      }
+    ]
   }
 }
