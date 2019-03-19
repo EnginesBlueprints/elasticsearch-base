@@ -16,7 +16,7 @@
         "patch": 0
       }
     },
-    "timestamp": "2019-03-19T19:31:05+11:00"
+    "timestamp": "2019-03-19T20:03:41+11:00"
   },
   "software": {
     "base": {
@@ -107,7 +107,7 @@
       },
       {
         "name": "ES_PATH_CONF",
-        "value": "/home/app/config/",
+        "value": "/home/app/elasticsearch/config/",
         "mandatory": true,
         "immutable": true,
         "input": {
