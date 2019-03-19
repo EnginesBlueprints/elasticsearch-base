@@ -16,7 +16,7 @@
         "patch": 0
       }
     },
-    "timestamp": "2019-03-19T15:18:26+11:00"
+    "timestamp": "2019-03-19T15:52:43+11:00"
   },
   "software": {
     "base": {
@@ -28,7 +28,7 @@
     "scripts": {
       "start": {
         "language": "sh",
-        "content": "!#/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\n\r\ncd /home/app/elasticsearch\r\n./bin/elasticsearch &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
+        "content": "!#/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\n\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\"-Xms$Memorym -Xmx$Memorym\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
       }
     },
     "installed_packages": [
@@ -97,13 +97,22 @@
         "input": {
           "type": "boolean"
         }
+      },
+      {
+        "name": "node_name",
+        "mandatory": true,
+        "immutable": true,
+        "ask_at_build_time": true,
+        "input": {
+          "type": "string"
+        }
       }
     ],
     "template_files": [
       {
         "path": "/home/app/config/elasticsearch.yml",
         "language": "text",
-        "content": "path:\r\n    data: /home/fs/data/\r\n    logs: /home/fs/logs/\r\n    repo: /home/fs/repo/"
+        "content": "path:\r\n    data: /home/fs/data/\r\n    logs: /home/fs/logs/\r\n    repo: /home/fs/repo/\r\n\r\nnetwork:\r\n  host: _site_\r\n  "
       }
     ],
     "persistent_directories": [
