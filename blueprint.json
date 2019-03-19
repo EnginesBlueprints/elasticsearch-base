@@ -16,14 +16,18 @@
         "patch": 0
       }
     },
-    "timestamp": "2019-03-19T15:52:43+11:00"
+    "timestamp": "2019-03-19T15:57:03+11:00"
   },
   "software": {
     "base": {
       "name": "elasticsearch",
       "framework": "openjdk9",
       "deployment_type": "web",
-      "http_protocol": "https_and_http"
+      "http_protocol": "https_and_http",
+      "memory": {
+        "required": 1024,
+        "recommended": 1024
+      }
     },
     "scripts": {
       "start": {
