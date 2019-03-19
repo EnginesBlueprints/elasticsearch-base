@@ -16,7 +16,7 @@
         "patch": 0
       }
     },
-    "timestamp": "2019-03-19T16:13:14+11:00"
+    "timestamp": "2019-03-19T16:27:42+11:00"
   },
   "software": {
     "base": {
@@ -41,7 +41,7 @@
         "download_type": "http(s)",
         "source_url": "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.6.2.tar.gz",
         "destination": "elasticsearch",
-        "extraction_command": "tar -zpf ",
+        "extraction_command": "tar -xzpf ",
         "path_to_extracted": "elasticsearch-6.6.2"
       }
     ],
