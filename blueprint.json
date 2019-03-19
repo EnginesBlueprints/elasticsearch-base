@@ -16,7 +16,7 @@
         "patch": 0
       }
     },
-    "timestamp": "2019-03-19T17:37:07+11:00"
+    "timestamp": "2019-03-19T19:15:09+11:00"
   },
   "software": {
     "base": {
@@ -29,10 +29,22 @@
         "recommended": 1024
       }
     },
+    "ports": [
+      {
+        "port": "9200",
+        "external": "9200",
+        "protocol": "tcp"
+      },
+      {
+        "port": "9300",
+        "external": "9300",
+        "protocol": "tcp"
+      }
+    ],
     "scripts": {
       "start": {
         "language": "sh",
-        "content": "#!/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\nmemory=`expr $Memory - 100`\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\"-Xms${memory}m -Xmx${memory}m\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
+        "content": "#!/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\nmemory=`expr $Memory - 200`\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\"-Xms${memory}m -Xmx${memory}m\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
       }
     },
     "installed_packages": [
@@ -119,9 +131,9 @@
         "content": "path:\r\n    data: /home/fs/data/\r\n    logs: /home/fs/logs/\r\n\r\n\r\nnetwork:\r\n  host: _site_\r\n  "
       }
     ],
-    "persistent_files": [
+    "persistent_directories": [
       {
-        "path": "/home/app/elasticsearch/config/elasticsearch.yml",
+        "path": "/home/app/elasticsearch/config",
         "volume_name": "config"
       }
     ]
