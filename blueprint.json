@@ -16,12 +16,12 @@
         "patch": 0
       }
     },
-    "timestamp": "2019-03-19T16:27:42+11:00"
+    "timestamp": "2019-03-19T17:07:02+11:00"
   },
   "software": {
     "base": {
       "name": "elasticsearch",
-      "framework": "openjdk9",
+      "framework": "openjdk8",
       "deployment_type": "web",
       "http_protocol": "https_and_http",
       "memory": {
@@ -32,7 +32,7 @@
     "scripts": {
       "start": {
         "language": "sh",
-        "content": "#!/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\n\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\"-Xms$Memorym -Xmx$Memorym\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
+        "content": "#!/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\n\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\"-Xms${Memory}m -Xmx{$Memory}m\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
       }
     },
     "installed_packages": [
@@ -95,7 +95,7 @@
       },
       {
         "name": "ES_PATH_CONF",
-        "value": "/home/app/config/elasticsearch.yml",
+        "value": "/home/app/config/",
         "mandatory": true,
         "immutable": true,
         "input": {
