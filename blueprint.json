@@ -16,7 +16,7 @@
         "patch": 0
       }
     },
-    "timestamp": "2019-03-19T20:05:44+11:00"
+    "timestamp": "2019-06-04T15:33:36+10:00"
   },
   "software": {
     "base": {
@@ -25,7 +25,7 @@
       "deployment_type": "web",
       "http_protocol": "https_and_http",
       "memory": {
-        "required": 2048,
+        "required": 768,
         "recommended": 3072
       }
     },
@@ -44,7 +44,7 @@
     "scripts": {
       "start": {
         "language": "sh",
-        "content": "#!/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\nmemory=`expr $Memory - 400`\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\"-Xms${memory}m -Xmx${memory}m\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
+        "content": "#!/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\nmemory=`expr $Memory - 200`\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\"-Xms${memory}m -Xmx${memory}m\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
       }
     },
     "installed_packages": [
@@ -67,7 +67,8 @@
           "engine_path": "",
           "permissions": "rw",
           "user": "_Engines_Builder(data_uid)",
-          "group": "_Engines_Builder(data_gid)"
+          "group": "_Engines_Builder(data_gid)",
+          "fw_user": "_Engines_Builder(cont_user_id)"
         }
       },
       {
@@ -79,7 +80,8 @@
           "engine_path": "",
           "permissions": "rw",
           "user": "_Engines_Builder(data_uid)",
-          "group": "_Engines_Builder(data_gid)"
+          "group": "_Engines_Builder(data_gid)",
+          "fw_user": "_Engines_Builder(cont_user_id)"
         }
       },
       {
@@ -91,7 +93,8 @@
           "engine_path": "",
           "permissions": "rw",
           "user": "_Engines_Builder(data_uid)",
-          "group": "_Engines_Builder(data_gid)"
+          "group": "_Engines_Builder(data_gid)",
+          "fw_user": "_Engines_Builder(cont_user_id)"
         }
       }
     ],
