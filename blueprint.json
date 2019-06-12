@@ -16,7 +16,7 @@
         "patch": 0
       }
     },
-    "timestamp": "2019-06-04T15:33:36+10:00"
+    "timestamp": "2019-06-12T13:01:02+10:00"
   },
   "software": {
     "base": {
@@ -49,12 +49,12 @@
     },
     "installed_packages": [
       {
-        "name": "elasticsearch-6.6.2.tar.gz",
+        "name": "elasticsearch-7.1.1.tar.gz",
         "download_type": "http(s)",
-        "source_url": "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.6.2.tar.gz",
+        "source_url": "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.1.1-linux-x86_64.tar.gz",
         "destination": "elasticsearch",
         "extraction_command": "tar -xzpf ",
-        "path_to_extracted": "elasticsearch-6.6.2"
+        "path_to_extracted": "elasticsearch-7.1.1"
       }
     ],
     "service_configurations": [
