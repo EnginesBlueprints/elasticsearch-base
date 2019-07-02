@@ -16,7 +16,7 @@
         "patch": 0
       }
     },
-    "timestamp": "2019-06-12T13:01:02+10:00"
+    "timestamp": "2019-07-02T15:18:00+10:00"
   },
   "software": {
     "base": {
@@ -44,7 +44,7 @@
     "scripts": {
       "start": {
         "language": "sh",
-        "content": "#!/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\nmemory=`expr $Memory - 200`\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\"-Xms${memory}m -Xmx${memory}m\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
+        "content": "#!/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\nmemory=`expr $Memory - 200`\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\" -XX:UseAVX=0 -Xms${memory}m -Xmx${memory}m\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
       }
     },
     "installed_packages": [
