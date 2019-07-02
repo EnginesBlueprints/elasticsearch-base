@@ -16,7 +16,7 @@
         "patch": 0
       }
     },
-    "timestamp": "2019-07-03T09:28:17+10:00"
+    "timestamp": "2019-07-03T09:37:00+10:00"
   },
   "software": {
     "base": {
@@ -99,12 +99,24 @@
       },
       {
         "publisher_namespace": "EnginesSystem",
+        "type_path": "ldap_group",
+        "variables": {
+          "type": "group",
+          "cn": "_Engines_Builder(engine_name)_admins",
+          "read_access": "all",
+          "write_access": "none",
+          "service_name": "group_Engines_Field(cn)"
+        }
+      },
+      {
+        "publisher_namespace": "EnginesSystem",
         "type_path": "ldap_access",
         "variables": {
           "access_dn": "uid=_Engines_Builder(engine_name),ou=hosts,ou=Engines,dc=engines,dc=internal",
           "ldap_password": "_Engines_System(random(8))",
           "service_name": "_Engines_Builder(engine_name)",
-          "type": "access"
+          "type": "access",
+          "group_membership": "\"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\""
         }
       },
       {
@@ -113,17 +125,6 @@
         "variables": {
           "type": "group",
           "cn": "_Engines_Builder(engine_name)_users",
-          "read_access": "all",
-          "write_access": "none",
-          "service_name": "group_Engines_Field(cn)"
-        }
-      },
-      {
-        "publisher_namespace": "EnginesSystem",
-        "type_path": "ldap_group",
-        "variables": {
-          "type": "group",
-          "cn": "_Engines_Builder(engine_name)_admins",
           "read_access": "all",
           "write_access": "none",
           "service_name": "group_Engines_Field(cn)"
@@ -168,7 +169,7 @@
       {
         "path": "/home/app/elasticsearch/config/group_to_role_mapping.yml",
         "language": "yaml",
-        "content": "monitoring: \r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\nuser:\r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=_Engines_Builder(engine_name)_users,ou=Applications,ou=Groups,dc=engines,dc=internal\"\r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\""
+        "content": "monitoring: \r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\nuser:\r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=_Engines_Builder(engine_name)_users,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\"\r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\""
       }
     ],
     "file_write_permissions": [
