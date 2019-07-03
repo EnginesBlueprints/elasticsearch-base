@@ -16,7 +16,7 @@
         "patch": 0
       }
     },
-    "timestamp": "2019-07-03T11:20:47+10:00"
+    "timestamp": "2019-07-03T15:22:58+10:00"
   },
   "software": {
     "base": {
@@ -44,7 +44,7 @@
     "scripts": {
       "start": {
         "language": "sh",
-        "content": "#!/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\nmemory=`expr $Memory - 200`\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\" -XX:UseAVX=0 -Xms${memory}m -Xmx${memory}m\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
+        "content": "#!/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\n\r\n/home/engines/scripts/actionators/build_group_mapping.sh\r\n\r\nmemory=`expr $Memory - 200`\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\" -XX:UseAVX=0 -Xms${memory}m -Xmx${memory}m\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
       }
     },
     "installed_packages": [
@@ -164,12 +164,27 @@
       {
         "path": "/home/app/elasticsearch/config/elasticsearch.yml",
         "language": "text",
-        "content": "path:\r\n    data: /home/fs/data/\r\n    logs: /home/fs/logs/\r\n\r\n\r\nnetwork:\r\n  host: _site_\r\ndiscovery:\r\n  type: single-node\r\n  \r\n#cluster:\r\n# initial_master_nodes:\r\n#  - _Engines_Builder(engine_name).engines.internal\r\n\r\nxpack:\r\n  security:\r\n    authc:\r\n      realms:\r\n        ldap:\r\n          ldap1:\r\n            order: 0\r\n            url: \"ldap://ldap\"\r\n            user_dn_templates:\r\n              - \"uid={0}, ou=People, dc=engines, dc=internal\"\r\n            group_search:\r\n              base_dn: \"ou=Groups,dc=engines,dc=internal\"\r\n            files:\r\n              role_mapping: \"/home/app/elasticsearch/config/group_to_role_mapping.yml\"\r\n            unmapped_groups_as_roles: false"
+        "content": "path:\r\n    data: /home/fs/data/\r\n    logs: /home/fs/logs/\r\n\r\n\r\nnetwork:\r\n  host: _site_\r\ndiscovery:\r\n  type: single-node\r\n  \r\n#cluster:\r\n# initial_master_nodes:\r\n#  - _Engines_Builder(engine_name).engines.internal\r\n\r\nxpack:\r\n  security:\r\n    enabled: true\r\n    authc:\r\n      realms:\r\n        ldap:\r\n          ldap1:\r\n            order: 0\r\n            url: \"ldap://ldap\"\r\n            user_dn_templates:\r\n              - \"uid={0}, ou=People, dc=engines, dc=internal\"\r\n              - \"cn={0}, ou=People, dc=engines, dc=internal\"\r\n              - \"uid={0}, ou=People, dc=engines, dc=internal\"\r\n            group_search:\r\n              base_dn: \"ou=Groups,dc=engines,dc=internal\"\r\n            files:\r\n              role_mapping: \"/home/app/elasticsearch/config/group_to_role_mapping.yml\"\r\n            unmapped_groups_as_roles: false"
       },
       {
         "path": "/home/app/elasticsearch/config/group_to_role_mapping.yml",
         "language": "yaml",
-        "content": "monitoring: \r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\nuser:\r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=_Engines_Builder(engine_name)_users,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\"\r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\""
+        "content": "monitoring: \r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\n  - \"uid=_Engines_Builder(engine_name),ou=hosts,ou=Engines,dc=engines,dc=internal\"\r\n\r\nuser:\r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=_Engines_Builder(engine_name)_users,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\"\r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\nsuperuser: \r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\n  - \"uid=_Engines_Builder(engine_name),ou=hosts,ou=Engines,dc=engines,dc=internal\"\r\n"
+      },
+      {
+        "path": "/home/app/roles/monitoring/head",
+        "language": "yaml",
+        "content": "monitoring: \r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\n  - \"uid=_Engines_Builder(engine_name),ou=hosts,ou=Engines,dc=engines,dc=internal\""
+      },
+      {
+        "path": "/home/app/roles/users/head",
+        "language": "yaml",
+        "content": "user:\r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=_Engines_Builder(engine_name)_users,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\"\r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\""
+      },
+      {
+        "path": "/home/app/roles/admin/head",
+        "language": "yaml",
+        "content": "superuser: \r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\n  - \"uid=_Engines_Builder(engine_name),ou=hosts,ou=Engines,dc=engines,dc=internal\""
       }
     ],
     "file_write_permissions": [
@@ -182,6 +197,82 @@
       {
         "path": "/home/app/elasticsearch/config",
         "volume_name": "config"
+      }
+    ],
+    "actionators": [
+      {
+        "name": "build_group_mapping",
+        "return_type": "none",
+        "script": {
+          "language": "sh",
+          "content": "#!bin/sh\r\nadd_entries()\r\n{\r\ncat /home/app/roles/$dir/head >> /home/app/elasticsearch/config/group_to_role_mapping.yml\r\nif test -d /home/app/roles/$dir/entries\r\n then\r\n   entry_list=`ls /home/app/roles/$dir/entries`\r\n      for entry_fn in `$entry_list`\r\n       do\r\n        entry=`cat $entry_fn`\r\n        echo \" - $entry\" >>  /home/app/elasticsearch/config/group_to_role_mapping.yml\r\n     done    \r\nfi     \r\n}\r\n\r\nrm /home/app/elasticsearch/config/group_to_role_mapping.yml\r\n\r\ndir=monitoring\r\nadd_entries\r\ndir=users\r\nadd_entries\r\ndir=admin\r\nadd_entries\r\n\r\n\r\n"
+        }
+      },
+      {
+        "name": "add_user_role",
+        "return_type": "none",
+        "variables": [
+          {
+            "name": "user_dn",
+            "input": {
+              "type": "string",
+              "comment": "full dn when using ldap"
+            }
+          },
+          {
+            "name": "uid",
+            "mandatory": true,
+            "input": {
+              "type": "string"
+            }
+          }
+        ],
+        "script": {
+          "content": "#!/bin/sh\r\n\r\nif ! test -d /home/app/roles/users/\r\n then\r\n   mkdir /home/app/roles/users/\r\nfi  \r\n\r\nif test -z $user_dn\r\n then\r\n  echo -n $uid  > /home/app/roles/users/$uid \r\n else\r\n  echo -n $user_dn  > /home/app/roles/users/$uid \r\nfi  \r\n\r\n/home/engines/scripts/actionators/build_group_mapping.sh\r\n"
+        }
+      },
+      {
+        "name": "add_admin_role",
+        "return_type": "none",
+        "variables": [
+          {
+            "name": "uid",
+            "input": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_dn",
+            "input": {
+              "type": "string"
+            }
+          }
+        ],
+        "script": {
+          "content": "#!/bin/sh\r\n\r\nif ! test -d /home/app/roles/admin/\r\n then\r\n   mkdir /home/app/roles/admin/\r\nfi  \r\n\r\nif test -z $user_dn\r\n then\r\n  echo -n $uid  > /home/app/roles/admin/$uid \r\n else\r\n  echo -n $user_dn  > /home/app/roles/admin/$uid \r\nfi  \r\n\r\n/home/engines/scripts/actionators/build_group_mapping.sh"
+        }
+      },
+      {
+        "name": "add_monitor_role",
+        "return_type": "none",
+        "variables": [
+          {
+            "name": "uid",
+            "mandatory": true,
+            "input": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_dn",
+            "input": {
+              "type": "string"
+            }
+          }
+        ],
+        "script": {
+          "content": "#!/bin/sh\r\n\r\nif ! test -d /home/app/roles/monitor/\r\n then\r\n   mkdir /home/app/roles/monitor/\r\nfi  \r\n\r\nif test -z $user_dn\r\n then\r\n  echo -n $uid  > /home/app/roles/monitor/$uid \r\n else\r\n  echo -n $user_dn  > /home/app/roles/monitor/$uid \r\nfi  \r\n\r\n/home/engines/scripts/actionators/build_group_mapping.sh\r\n"
+        }
       }
     ]
   }
