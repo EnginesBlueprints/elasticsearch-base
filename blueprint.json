@@ -22,11 +22,11 @@
         "label": "Elastic Search"
       }
     },
-    "timestamp": "2019-07-04T09:13:34+10:00"
+    "timestamp": "2019-07-04T09:48:08+10:00"
   },
   "software": {
     "base": {
-      "name": "elasticsearch",
+      "name": "elasticsearchb",
       "framework": "openjdk8",
       "deployment_type": "web",
       "http_protocol": "https_and_http",
@@ -132,28 +132,8 @@
     "template_files": [
       {
         "path": "/home/app/elasticsearch/config/elasticsearch.yml",
-        "language": "text",
-        "content": "path:\r\n    data: /home/fs/data/\r\n    logs: /home/fs/logs/\r\n\r\n\r\nnetwork:\r\n  host: _site_\r\ndiscovery:\r\n  type: single-node\r\n  \r\n#cluster:\r\n# initial_master_nodes:\r\n#  - _Engines_Builder(engine_name).engines.internal\r\n\r\nxpack:\r\n  security:\r\n    enabled: true\r\n    authc:\r\n      realms:\r\n        ldap:\r\n          ldap1:\r\n            order: 0\r\n            url: \"ldap://ldap\"\r\n            user_dn_templates:\r\n              - \"uid={0}, ou=People, dc=engines, dc=internal\"\r\n              - \"cn={0}, ou=People, dc=engines, dc=internal\"\r\n              - \"uid={0}, ou=hosts,ou=engines, dc=engines, dc=internal\"\r\n            group_search:\r\n              base_dn: \"ou=Groups,dc=engines,dc=internal\"\r\n            files:\r\n              role_mapping: \"/home/app/elasticsearch/config/group_to_role_mapping.yml\"\r\n            unmapped_groups_as_roles: false"
-      },
-      {
-        "path": "/home/app/elasticsearch/config/group_to_role_mapping.yml",
         "language": "yaml",
-        "content": "monitoring: \r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\n  - \"uid=_Engines_Builder(engine_name),ou=hosts,ou=Engines,dc=engines,dc=internal\"\r\n\r\nuser:\r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=_Engines_Builder(engine_name)_users,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\"\r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\nsuperuser: \r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\n  - \"uid=_Engines_Builder(engine_name),ou=hosts,ou=Engines,dc=engines,dc=internal\"\r\n"
-      },
-      {
-        "path": "/home/app/roles/monitoring/head",
-        "language": "yaml",
-        "content": "monitoring: \r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\n  - \"uid=_Engines_Builder(engine_name),ou=hosts,ou=Engines,dc=engines,dc=internal\""
-      },
-      {
-        "path": "/home/app/roles/users/head",
-        "language": "yaml",
-        "content": "user:\r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=_Engines_Builder(engine_name)_users,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\"\r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\""
-      },
-      {
-        "path": "/home/app/roles/admin/head",
-        "language": "yaml",
-        "content": "superuser: \r\n  - \"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\" \r\n  - \"cn=administrators,ou=Groups,dc=engines,dc=internal\"\r\n  - \"uid=_Engines_Builder(engine_name),ou=hosts,ou=Engines,dc=engines,dc=internal\""
+        "content": "path:\r\n    data: /home/fs/data/\r\n    logs: /home/fs/logs/\r\n\r\n\r\nnetwork:\r\n  host: _site_\r\ndiscovery:\r\n  type: single-node\r\n\r\n\r\n"
       }
     ],
     "file_write_permissions": [
