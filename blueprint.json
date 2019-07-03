@@ -22,7 +22,7 @@
         "label": "Elastic Search"
       }
     },
-    "timestamp": "2019-07-04T08:32:23+10:00"
+    "timestamp": "2019-07-04T09:13:34+10:00"
   },
   "software": {
     "base": {
@@ -30,17 +30,13 @@
       "framework": "openjdk8",
       "deployment_type": "web",
       "http_protocol": "https_and_http",
+      "framework_port_override": 9200,
       "memory": {
         "required": 768,
         "recommended": 3072
       }
     },
     "ports": [
-      {
-        "port": "9200",
-        "external": "9200",
-        "protocol": "tcp"
-      },
       {
         "port": "9300",
         "external": "9300",
@@ -101,39 +97,6 @@
           "user": "_Engines_Builder(data_uid)",
           "group": "_Engines_Builder(data_gid)",
           "fw_user": "_Engines_Builder(cont_user_id)"
-        }
-      },
-      {
-        "publisher_namespace": "EnginesSystem",
-        "type_path": "ldap_group",
-        "variables": {
-          "type": "group",
-          "cn": "_Engines_Builder(engine_name)_admins",
-          "read_access": "all",
-          "write_access": "none",
-          "service_name": "group_Engines_Field(cn)"
-        }
-      },
-      {
-        "publisher_namespace": "EnginesSystem",
-        "type_path": "ldap_access",
-        "variables": {
-          "access_dn": "uid=_Engines_Builder(engine_name),ou=hosts,ou=Engines,dc=engines,dc=internal",
-          "ldap_password": "_Engines_System(random(8))",
-          "service_name": "_Engines_Builder(engine_name)",
-          "type": "access",
-          "group_membership": "\"cn=_Engines_Builder(engine_name)_admins,ou=_Engines_Builder(engine_name),ou=Applications,ou=Groups,dc=engines,dc=internal\""
-        }
-      },
-      {
-        "publisher_namespace": "EnginesSystem",
-        "type_path": "ldap_group",
-        "variables": {
-          "type": "group",
-          "cn": "_Engines_Builder(engine_name)_users",
-          "read_access": "all",
-          "write_access": "none",
-          "service_name": "group_Engines_Field(cn)"
         }
       }
     ],
@@ -207,78 +170,36 @@
     ],
     "actionators": [
       {
-        "name": "build_group_mapping",
-        "return_type": "none",
-        "script": {
-          "language": "sh",
-          "content": "#!bin/sh\r\nadd_entries()\r\n{\r\ncat /home/app/roles/$dir/head >> /home/app/elasticsearch/config/group_to_role_mapping.yml\r\nif test -d /home/app/roles/$dir/entries\r\n then\r\n   entry_list=`ls /home/app/roles/$dir/entries`\r\n      for entry_fn in `$entry_list`\r\n       do\r\n        entry=`cat $entry_fn`\r\n        echo \" - $entry\" >>  /home/app/elasticsearch/config/group_to_role_mapping.yml\r\n     done    \r\nfi     \r\n}\r\n\r\nrm /home/app/elasticsearch/config/group_to_role_mapping.yml\r\n\r\ndir=monitoring\r\nadd_entries\r\ndir=users\r\nadd_entries\r\ndir=admin\r\nadd_entries\r\n\r\n\r\n"
-        }
-      },
-      {
-        "name": "add_user_role",
+        "name": "add_user",
         "return_type": "none",
         "variables": [
           {
-            "name": "user_dn",
-            "input": {
-              "type": "string",
-              "comment": "full dn when using ldap"
-            }
-          },
-          {
-            "name": "uid",
-            "mandatory": true,
-            "input": {
-              "type": "string"
-            }
-          }
-        ],
-        "script": {
-          "content": "#!/bin/sh\r\n\r\nif ! test -d /home/app/roles/users/\r\n then\r\n   mkdir /home/app/roles/users/\r\nfi  \r\n\r\nif test -z $user_dn\r\n then\r\n  echo -n $uid  > /home/app/roles/users/$uid \r\n else\r\n  echo -n $user_dn  > /home/app/roles/users/$uid \r\nfi  \r\n\r\n/home/engines/scripts/actionators/build_group_mapping.sh\r\n"
-        }
-      },
-      {
-        "name": "add_admin_role",
-        "return_type": "none",
-        "variables": [
-          {
-            "name": "uid",
-            "input": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "user_dn",
-            "input": {
-              "type": "string"
-            }
-          }
-        ],
-        "script": {
-          "content": "#!/bin/sh\r\n\r\nif ! test -d /home/app/roles/admin/\r\n then\r\n   mkdir /home/app/roles/admin/\r\nfi  \r\n\r\nif test -z $user_dn\r\n then\r\n  echo -n $uid  > /home/app/roles/admin/$uid \r\n else\r\n  echo -n $user_dn  > /home/app/roles/admin/$uid \r\nfi  \r\n\r\n/home/engines/scripts/actionators/build_group_mapping.sh"
-        }
-      },
-      {
-        "name": "add_monitor_role",
-        "return_type": "none",
-        "variables": [
-          {
-            "name": "uid",
+            "name": "user_id",
             "mandatory": true,
             "input": {
               "type": "string"
             }
           },
           {
-            "name": "user_dn",
+            "name": "password",
             "input": {
-              "type": "string"
+              "type": "password_with_confirmation"
+            }
+          },
+          {
+            "name": "role",
+            "input": {
+              "type": "select_multiple",
+              "collection": {
+                "items": {
+                  "superuser": "admin",
+                  "monitor": "monitor",
+                  "user": "user"
+                }
+              }
             }
           }
-        ],
-        "script": {
-          "content": "#!/bin/sh\r\n\r\nif ! test -d /home/app/roles/monitor/\r\n then\r\n   mkdir /home/app/roles/monitor/\r\nfi  \r\n\r\nif test -z $user_dn\r\n then\r\n  echo -n $uid  > /home/app/roles/monitor/$uid \r\n else\r\n  echo -n $user_dn  > /home/app/roles/monitor/$uid \r\nfi  \r\n\r\n/home/engines/scripts/actionators/build_group_mapping.sh\r\n"
-        }
+        ]
       }
     ]
   }
