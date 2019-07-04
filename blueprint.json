@@ -22,7 +22,7 @@
         "label": "Elastic Search"
       }
     },
-    "timestamp": "2019-07-04T13:21:18+10:00"
+    "timestamp": "2019-07-04T14:40:28+10:00"
   },
   "software": {
     "base": {
@@ -111,6 +111,17 @@
           "group": "_Engines_Builder(data_gid)",
           "fw_user": "_Engines_Builder(cont_user_id)"
         }
+      },
+      {
+        "publisher_namespace": "EnginesSystem",
+        "type_path": "cron",
+        "variables": {
+          "action_type": "action",
+          "cron_job": "run_backup",
+          "title": "backup_to_repo",
+          "when": "12 0 * * *",
+          "notification_address": "default"
+        }
       }
     ],
     "environment_variables": [
@@ -167,7 +178,14 @@
         "return_type": "file",
         "return_file_name": "_Engines_Builder(engine_name)_backup.tgz",
         "script": {
-          "content": "#!/bin/sh\r\n\r\ncurl -X PUT \"_Engines_Builder(engine_name):9200/_snapshot/my_backup\" -H 'Content-Type: application/json' -d'\r\n{\r\n  \"type\": \"fs\",\r\n  \"settings\": {\r\n    \"location\": \"/home/fs/backup\"\r\n  }\r\n}\r\n'\r\n\r\ntar -czpf - /home/fs/backup\r\n"
+          "content": "#!/bin/sh\r\n\r\n/home/engines/scripts/actionators/run_backup.sh\r\n\r\ntar -czpf - /home/fs/backup\r\n"
+        }
+      },
+      {
+        "name": "run_backup",
+        "return_type": "none",
+        "script": {
+          "content": "#!/bin/sh\r\n\r\ncurl -X PUT \"_Engines_Builder(engine_name):9200/_snapshot/my_backup\" -H 'Content-Type: application/json' -d'\r\n{\r\n  \"type\": \"fs\",\r\n  \"settings\": {\r\n    \"location\": \"/home/fs/backup\"\r\n  }\r\n}\r\n' >/dev/null"
         }
       }
     ]
