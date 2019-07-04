@@ -22,7 +22,7 @@
         "label": "Elastic Search"
       }
     },
-    "timestamp": "2019-07-04T09:48:08+10:00"
+    "timestamp": "2019-07-04T11:46:26+10:00"
   },
   "software": {
     "base": {
@@ -98,6 +98,19 @@
           "group": "_Engines_Builder(data_gid)",
           "fw_user": "_Engines_Builder(cont_user_id)"
         }
+      },
+      {
+        "publisher_namespace": "EnginesSystem",
+        "type_path": "filesystem/local/filesystem",
+        "variables": {
+          "service_name": "backup",
+          "volume_src": "",
+          "engine_path": "/home/fs/backup",
+          "permissions": "rw",
+          "user": "_Engines_Builder(data_uid)",
+          "group": "_Engines_Builder(data_gid)",
+          "fw_user": "_Engines_Builder(cont_user_id)"
+        }
       }
     ],
     "environment_variables": [
@@ -133,7 +146,7 @@
       {
         "path": "/home/app/elasticsearch/config/elasticsearch.yml",
         "language": "yaml",
-        "content": "path:\r\n    data: /home/fs/data/\r\n    logs: /home/fs/logs/\r\n\r\n\r\nnetwork:\r\n  host: _site_\r\ndiscovery:\r\n  type: single-node\r\n\r\n\r\n"
+        "content": "path:\r\n    data: /home/fs/data/\r\n    logs: /home/fs/logs/\r\n    repo: /home/fs/backup\"\r\n\r\nnetwork:\r\n  host: _site_\r\ndiscovery:\r\n  type: single-node\r\n\r\n\r\n"
       }
     ],
     "file_write_permissions": [
@@ -150,36 +163,12 @@
     ],
     "actionators": [
       {
-        "name": "add_user",
-        "return_type": "none",
-        "variables": [
-          {
-            "name": "user_id",
-            "mandatory": true,
-            "input": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "password",
-            "input": {
-              "type": "password_with_confirmation"
-            }
-          },
-          {
-            "name": "role",
-            "input": {
-              "type": "select_multiple",
-              "collection": {
-                "items": {
-                  "superuser": "admin",
-                  "monitor": "monitor",
-                  "user": "user"
-                }
-              }
-            }
-          }
-        ]
+        "name": "backup",
+        "return_type": "file",
+        "return_file_name": "_Engines_Builder(engine_name)_backup.tgz",
+        "script": {
+          "content": "#!/bin/sh\r\n\r\ncurl -X PUT \"_Engines_Builder(engine_name):9200/_snapshot/my_backup\" -H 'Content-Type: application/json' -d'\r\n{\r\n  \"type\": \"fs\",\r\n  \"settings\": {\r\n    \"location\": \"/home/fs/backup\"\r\n  }\r\n}\r\n'\r\n\r\ntar -czpf - /home/fs/backup\r\n"
+        }
       }
     ]
   }
