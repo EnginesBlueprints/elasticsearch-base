@@ -22,7 +22,7 @@
         "label": "Elastic Search"
       }
     },
-    "timestamp": "2019-07-04T11:46:26+10:00"
+    "timestamp": "2019-07-04T13:21:18+10:00"
   },
   "software": {
     "base": {
@@ -46,7 +46,7 @@
     "scripts": {
       "start": {
         "language": "sh",
-        "content": "#!/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\n\r\n/home/engines/scripts/actionators/build_group_mapping.sh\r\n\r\nmemory=`expr $Memory - 200`\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\" -XX:UseAVX=0 -Xms${memory}m -Xmx${memory}m\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait\r\nshutdown_complete\r\n"
+        "content": "#!/bin/sh\r\nPID_FILE=/var/run/engines/eleasticsearch.pid\r\n\r\nexport PID_FILE\r\n\r\n. /home/engines/functions/trap.sh\r\nwait_for_signal()\r\n{\r\n    while ! test -f /home/engines/run/flags/sig_term -o -f /home/engines/run/flags/sig_quit \r\n     do\r\n      sleep 3600 &\r\n      wait\r\n     done\r\n}\r\n\r\n/home/engines/scripts/actionators/build_group_mapping.sh\r\n\r\nmemory=`expr $Memory - 200`\r\ncd /home/app/elasticsearch\r\nES_JAVA_OPTS=\" -XX:UseAVX=0 -Xms${memory}m -Xmx${memory}m\" ./bin/elasticsearch -Enode.name=$node_name &\r\necho $! > $PID_FILE\r\nstartup_complete\r\nwait_for_signal\r\nshutdown_complete\r\n"
       }
     },
     "installed_packages": [
@@ -68,7 +68,7 @@
           "volume_src": "",
           "engine_path": "",
           "permissions": "rw",
-          "user": "_Engines_Builder(data_uid)",
+          "user": "_Engines_Builder(cont_user_id)",
           "group": "_Engines_Builder(data_gid)",
           "fw_user": "_Engines_Builder(cont_user_id)"
         }
@@ -81,7 +81,7 @@
           "volume_src": "",
           "engine_path": "",
           "permissions": "rw",
-          "user": "_Engines_Builder(data_uid)",
+          "user": "_Engines_Builder(cont_user_id)",
           "group": "_Engines_Builder(data_gid)",
           "fw_user": "_Engines_Builder(cont_user_id)"
         }
@@ -94,7 +94,7 @@
           "volume_src": "",
           "engine_path": "",
           "permissions": "rw",
-          "user": "_Engines_Builder(data_uid)",
+          "user": "_Engines_Builder(cont_user_id)",
           "group": "_Engines_Builder(data_gid)",
           "fw_user": "_Engines_Builder(cont_user_id)"
         }
@@ -107,7 +107,7 @@
           "volume_src": "",
           "engine_path": "/home/fs/backup",
           "permissions": "rw",
-          "user": "_Engines_Builder(data_uid)",
+          "user": "_Engines_Builder(cont_user_id)",
           "group": "_Engines_Builder(data_gid)",
           "fw_user": "_Engines_Builder(cont_user_id)"
         }
