@@ -22,7 +22,7 @@
         "label": "Elastic Search"
       }
     },
-    "timestamp": "2019-07-05T14:02:21+10:00"
+    "timestamp": "2019-07-06T11:54:14+10:00"
   },
   "software": {
     "base": {
@@ -84,7 +84,8 @@
           "permissions": "rw",
           "user": "_Engines_Builder(cont_user_id)",
           "group": "_Engines_Builder(data_gid)",
-          "fw_user": "_Engines_Builder(cont_user_id)"
+          "fw_user": "_Engines_Builder(cont_user_id)",
+          "exclude_from_backup": "false"
         }
       },
       {
@@ -111,7 +112,8 @@
           "permissions": "rw",
           "user": "_Engines_Builder(cont_user_id)",
           "group": "_Engines_Builder(data_gid)",
-          "fw_user": "_Engines_Builder(cont_user_id)"
+          "fw_user": "_Engines_Builder(cont_user_id)",
+          "exclude_from_backup": "false"
         }
       },
       {
@@ -187,7 +189,7 @@
         "name": "run_backup",
         "return_type": "none",
         "script": {
-          "content": "#!/bin/sh\r\n\r\ncurl -X PUT \"_Engines_Builder(engine_name):9200/_snapshot/my_backup\" -H 'Content-Type: application/json' -d'\r\n{\r\n  \"type\": \"fs\",\r\n  \"settings\": {\r\n    \"location\": \"/home/fs/backup\"\r\n  }\r\n}\r\n' >/dev/null"
+          "content": "#!/bin/sh\r\n\r\ncurl -X PUT \"_Engines_Builder(engine_name):9200/_snapshot/my_backup\" -H 'Content-Type: application/json' -d'\r\n{\r\n  \"type\": \"fs\",\r\n  \"settings\": {\r\n    \"location\": \"/home/fs/backup\"\r\n  }\r\n}\r\n' "
         }
       }
     ]
