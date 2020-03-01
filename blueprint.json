@@ -22,7 +22,7 @@
         "label": "Elastic Search"
       }
     },
-    "timestamp": "2019-07-06T11:54:14+10:00"
+    "timestamp": "2020-03-01T16:44:15+11:00"
   },
   "software": {
     "base": {
@@ -51,12 +51,12 @@
     },
     "installed_packages": [
       {
-        "name": "elasticsearch-7.2.0.tar.gz",
+        "name": "elasticsearch-7.6.0.tar.gz",
         "download_type": "http(s)",
-        "source_url": "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.2.0-linux-x86_64.tar.gz",
+        "source_url": "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.6.0-linux-x86_64.tar.gz",
         "destination": "elasticsearch",
         "extraction_command": "tar -xzpf ",
-        "path_to_extracted": "elasticsearch-7.2.0"
+        "path_to_extracted": "elasticsearch-7.6.0"
       }
     ],
     "service_configurations": [
